@@ -707,7 +707,7 @@ local InventoryService <const> = {
 				return
 			end
 
-			if not INVENTORY_SERVICE.ASK_TO_GIVE_ITEMS(source, target, { type = "item_ammo", ammotype = ammotype, amount = amount }) then
+			if not INVENTORY_SERVICE.GIVE.ASK_TO_GIVE_ITEMS(source, target, { type = "item_ammo", ammotype = ammotype, amount = amount }) then
 				return
 			end
 
@@ -3053,7 +3053,7 @@ local InventoryService <const> = {
 				return cb(false)
 			end
 
-			local character <const> = Core.getUser(source)?.getUsedCharacter
+			local character <const> = CORE.getUser(source)?.getUsedCharacter
 			if not character then
 				return cb(false)
 			end
@@ -3071,18 +3071,14 @@ local InventoryService <const> = {
 				local itemName <const> = itemData:getName()
 				local itemAmount <const> = itemData:getCount()
 				local itemNeeded <const> = needed[itemName]
-				if not itemNeeded then
-					return cb(false)
-				end
 
-				if itemAmount < itemNeeded then
-					return cb(false)
+				if itemNeeded and itemAmount >= itemNeeded then
+					table.insert(idsToRemove, itemId)
 				end
-				table.insert(idsToRemove, itemId)
 			end
 
-			for _, itemId in ipairs(idsToRemove) do
-				INVENTORY_API.MAIN.SUB_ITEM_BY_ID(source, itemId)
+			if #idsToRemove == 0 then
+				return cb(false)
 			end
 
 
@@ -3110,6 +3106,10 @@ local InventoryService <const> = {
 				if not result then
 					return cb(false)
 				end
+			end
+
+			for _, itemId in ipairs(idsToRemove) do
+				INVENTORY_API.MAIN.SUB_ITEM_BY_ID(source, itemId)
 			end
 
 			return cb(true)
