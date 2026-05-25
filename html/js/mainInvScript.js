@@ -2422,6 +2422,7 @@ $("document").ready(function () {
             Config.EnableHotbar = LuaConfig.EnableHotbar;
             Config.EnableHandCraftButton = LuaConfig.EnableHandCraftButton;
             Config.EnableSaddleButton = LuaConfig.EnableSaddleButton;
+            Config.EnableWeaponAttachments = LuaConfig.EnableWeaponAttachments;
             Config.HotbarAllow = LuaConfig.HotbarAllow;
             Config.ItemRaritySlotStyle = LuaConfig.ItemRaritySlotStyle ?? Config.ItemRaritySlotStyle;
             if (LuaConfig.TooltipPlacement) {
@@ -2435,7 +2436,7 @@ $("document").ready(function () {
             }
             $("#handCraftingOpenBtn").toggle(!!Config.EnableHandCraftButton);
             $("#inventorySaddleBtn").toggle(!!Config.EnableSaddleButton);
-            $("#weaponAttachmentsOpenBtn").show();
+            $("#weaponAttachmentsOpenBtn").toggle(Config.EnableWeaponAttachments);
             if (!Config.EnableHandCraftButton && Config.EnableSaddleButton) {
                 $("#inventorySaddleBtn").css("margin-left", "3.5vw");
             } else {
@@ -2507,7 +2508,7 @@ $("document").ready(function () {
             $("body").toggleClass("main-inv-with-secondary", event.data.type !== "main");
             $("#handCraftingOpenBtn").prop("disabled", type !== "main" || !Config.EnableHandCraftButton);
             $("#inventorySaddleBtn").prop("disabled", type !== "main" || !Config.EnableSaddleButton);
-            $("#weaponAttachmentsOpenBtn").prop("disabled", type !== "main");
+            $("#weaponAttachmentsOpenBtn").prop("disabled", type !== "main" || Config.EnableWeaponAttachments !== true);
             HOTBAR.VISIBILITY.REFRESH();
             stopTooltip = false;
             INVENTORY.MAIN.MOVE_INVENTORY_HUD("main");

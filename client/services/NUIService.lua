@@ -990,8 +990,8 @@ local nuiService = {
 				config = {
 					UseGoldItem = CONFIG.INVENTORY_UI.ADD_GOLD_ITEM,
 					AddGoldItem = CONFIG.INVENTORY_UI.ADD_GOLD_ITEM,
-					AddDollarItem = CONFIG.INVENTORY_UI.ADD_MONEY_ITEM,
-					AddAmmoItem = CONFIG.INVENTORY_UI.ADD_GUNBELT_ITEM,
+					AddDollarItem = true,
+					AddAmmoItem = true,
 					UseRolItem = CONFIG.INVENTORY_UI.ADD_ROLL_ITEM,
 					AddRollItem = CONFIG.INVENTORY_UI.ADD_ROLL_ITEM,
 					WeightMeasure = CONFIG.INVENTORY_UI.WEIGHT_MEASURE,
@@ -1002,6 +1002,7 @@ local nuiService = {
 					EnableHandCraftButton = CONFIG.INVENTORY_UI.HAND_CRAFT_BUTTON,
 					EnableSaddleButton = CONFIG.INVENTORY_UI.SADDLE_BUTTON,
 					MainInventoryFixedSlotCount = CONFIG.INVENTORY_UI.MAIN_INVENTORY_FIXED_SLOT_COUNT,
+					EnableWeaponAttachments = CONFIG.USE_WEAPON_COMPONENTS,
 				}
 			})
 		end,

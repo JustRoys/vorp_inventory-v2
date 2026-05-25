@@ -42,6 +42,9 @@ CONFIG.EQUIP_WEAPONS                     = {
 	SHORT_WEAPONS = 2, -- HOW MANY THEY CAN EQUIP AT THE SAME TIME IF ONE THEY CAN ONLY EQUIP ONE SHORT WEAPON
 }
 -------------------------
+----- if you have a weapons script you might have to modify it to work with vorp_inventory, or disable this feature
+----- by default works with vorp weapons
+CONFIG.USE_WEAPON_COMPONENTS             = false                  -- if true inventory will allow you to use weapon attachements and will load attachements saved in the database
 
 CONFIG.USE_WEAPON_DEGRADATION            = true                   -- If true, the weapon degradation will be used meaning you can inspect and clean it, and weapon stats will be saved across restarts
 
@@ -54,7 +57,6 @@ CONFIG.CLEAN_WEAPON_ITEM                 = "gun_oil"              -- item to cle
 CONFIG.TIME_BETWEEN_ITEM_USE             = 2000                   -- ms
 
 CONFIG.OPEN_INVENTORY_KEY                = `INPUT_QUICK_USE_ITEM` -- key to open inventory: I
-
 
 
 CONFIG.INVENTORY_UI = {
@@ -77,11 +79,7 @@ CONFIG.INVENTORY_UI = {
 	-- tooltip "hover" = under the hovered slot (default). "dock" = fixed to the right of the main grid with secondary/custom storage open
 	TOOLTIP_PLACEMENT = "hover",
 
-	ADD_GUNBELT_ITEM = true,           -- leave always true
-
 	MAIN_INVENTORY_FIXED_SLOT_COUNT = 52, -- how many slots a player can have.this will be added per character in the future. to allow skills to be used to increase it.
-
-	ADD_MONEY_ITEM = true,             -- leave always true
 
 	ADD_GOLD_ITEM = false,             -- If true, the gold item will be added to the inventory to represent the gold/give gold/drop gold
 

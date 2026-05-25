@@ -1543,6 +1543,7 @@ local InventoryService <const> = {
 		end,
 
 		ADD_COMPONENT = function(source, cb, args)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return cb(false) end
 			local weaponId <const> = args.id
 			local component <const> = args.component
 			local category <const> = args.slotCategory
@@ -1596,6 +1597,7 @@ local InventoryService <const> = {
 		end,
 
 		REMOVE_COMPONENT = function(source, cb, args)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return cb(false) end
 			local weaponId <const> = args.id
 			local component <const> = args.component -- item name
 			local category <const> = args.slotCategory
@@ -1627,10 +1629,7 @@ local InventoryService <const> = {
 
 		SAVE_STATUS = function(updates)
 			local _source <const> = source
-			if not CONFIG.USE_WEAPON_DEGRADATION then
-				return
-			end
-
+			if not CONFIG.USE_WEAPON_DEGRADATION then return end
 
 			for id, data in pairs(updates) do
 				local weaponId <const> = tonumber(id) or id

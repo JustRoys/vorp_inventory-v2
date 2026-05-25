@@ -187,6 +187,7 @@ local Weapon <const> = LIB.Class:Create({
 		end,
 
 		getAllComponents          = function(self)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return {} end
 			return self.components
 		end,
 
@@ -197,15 +198,18 @@ local Weapon <const> = LIB.Class:Create({
 			end
 			return 0
 		end,
+
 		getDefaultClipSize        = function(self)
 			return self.defaultClipSize
 		end,
 
 		getComponentCategoryCount = function(self)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return 0 end
 			return self.componentCategoryCount
 		end,
 
 		getStatus                 = function(self)
+			if not CONFIG.USE_WEAPON_DEGRADATION then return {} end
 			local weaponObject <const> = getObjectIndexFromPed(joaat(self.name))
 			if not weaponObject then return {} end
 			local function normalize(v)
@@ -233,6 +237,7 @@ local Weapon <const> = LIB.Class:Create({
 
 	set = {
 		setDefaultAttachments = function(self)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return end
 			local attachments <const> = SHARED_DATA.WEAPONS[self.name]?.Components
 			if not attachments then return end
 
@@ -365,7 +370,6 @@ local Weapon <const> = LIB.Class:Create({
 					local keepInWeapon <const> = 1
 					if ammoInWeapon > keepInWeapon then
 						local amountToRemove <const> = ammoInWeapon - keepInWeapon
-						print("removing ammo from throwable weapon", ammoType, amountToRemove, self.name)
 						RemoveAmmoFromPedByType(CACHE.Ped, joaat(ammoType), amountToRemove, `REMOVE_REASON_DROPPED`)
 						self:subAmmo(ammoType, amountToRemove) -- update ammo
 					end
@@ -419,6 +423,7 @@ local Weapon <const> = LIB.Class:Create({
 		end,
 
 		loadComponents        = function(self)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return end
 			local value <const> = SHARED_DATA.WEAPONS[self.name]
 			if not value then return end
 
@@ -451,6 +456,7 @@ local Weapon <const> = LIB.Class:Create({
 
 
 		removeComponent      = function(self, component, category)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return end
 			local NON_REPLACEABLE_COMPONENTS <const> = {
 				COMPONENT_RIFLE_SCOPE02 = true,
 				COMPONENT_RIFLE_SCOPE03 = true,
@@ -484,6 +490,7 @@ local Weapon <const> = LIB.Class:Create({
 		end,
 
 		addComponent         = function(self, component, category)
+			if not CONFIG.USE_WEAPON_COMPONENTS then return end
 			self.components[category] = component
 			GiveWeaponComponentToEntity(CACHE.Ped, joaat(component), joaat(self.name), true)
 
@@ -635,6 +642,7 @@ local Weapon <const> = LIB.Class:Create({
 
 		-- called once a startup to set the status of the weapon
 		setStatus            = function(self)
+			if not CONFIG.USE_WEAPON_DEGRADATION then return end
 			if not self.used and not self.used2 then return print("weapon not used") end
 			if not self.canDegrade then return end
 
@@ -649,6 +657,7 @@ local Weapon <const> = LIB.Class:Create({
 		end,
 
 		updateStatus         = function(self)
+			if not CONFIG.USE_WEAPON_DEGRADATION then return end
 			-- updates the status of each weapon attached to player or not, but only weapons that are marked as used or used2
 			if not self.used and not self.used2 then return end
 			if not self.canDegrade then return end
