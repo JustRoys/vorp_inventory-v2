@@ -187,16 +187,13 @@ end
 
 local function getWeaponStats(weapon, used, used2)
 	if not used and not used2 then return end
-	local status <const> = weapon:getStatus()
 	return {
-		degradation = tonumber(status.degradation) or 0.0,
-		damage = tonumber(status.damage) or 0.0,
-		dirt = tonumber(status.dirt) or 0.0,
-		soot = tonumber(status.soot) or 0.0,
+		degradation = weapon.degradation,
+		damage = weapon.damage,
+		dirt = weapon.dirt,
+		soot = weapon.soot,
 	}
 end
-
-
 
 
 local nuiService = {

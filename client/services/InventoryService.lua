@@ -138,9 +138,7 @@ local inventory <const> = {
 	GET_LOADOUT = function(loadout)
 		RemoveAllPedWeapons(CACHE.Ped, true, true)
 		RemoveAllPedAmmo(CACHE.Ped)
-		print("removed all weapons and ammo")
 		Wait(1000)
-		print("loaded out")
 
 		for _, weapon in ipairs(loadout) do
 			if weapon.currInv == "default" and (weapon.dropped == nil or weapon.dropped == 0) then
