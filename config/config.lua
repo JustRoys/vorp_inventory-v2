@@ -3,7 +3,6 @@ CONFIG                     = CONFIG or {}
 
 CONFIG.LANGUAGE            = "English"
 
-CONFIG.DEV_MODE            = false   -- If your server is live set this to false
 
 CONFIG.PUSH_TO_TALK        = true    -- enable PTT while inventory is open
 
@@ -49,7 +48,6 @@ CONFIG.EQUIP_WEAPONS                     = {
 -------------------------
 ----- if you have a weapons script you might have to modify it to work with vorp_inventory, or disable this feature
 ----- by default works will  with vorp weapons
-CONFIG.USE_WEAPON_COMPONENTS             = false                  -- if true inventory will allow you to use weapon attachements and will load attachements saved in the database
 
 CONFIG.USE_WEAPON_DEGRADATION            = true                   -- If true, the weapon degradation will be used meaning you can inspect and clean it, and weapon stats will be saved across restarts
 
@@ -93,6 +91,8 @@ CONFIG.INVENTORY_UI = {
 	HAND_CRAFT_BUTTON = true,          -- enables hand crafting button in inventory
 
 	SADDLE_BUTTON = true,              -- enables saddle inventory button
+
+	SORT_BUTTON = true,              -- enables sort inventory button
 
 }
 
