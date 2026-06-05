@@ -1115,7 +1115,7 @@ local InventoryAPI = {
 			local userWeapons <const> = USERS_WEAPONS.default[weaponId]
 			if not userWeapons then return respond(cb, false) end
 
-			for component, category in pairs(components) do
+			for category, component in pairs(components) do
 				userWeapons:removeComponent(component, category)
 			end
 			TriggerClientEvent("vorp_inventory:subComponents", _source, weaponId, components)
