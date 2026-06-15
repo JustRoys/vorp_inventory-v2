@@ -693,7 +693,7 @@ local Weapon <const> = LIB.Class:Create({
 						end
 					else
 						if amount > 0 then
-							if amount > GetMaxAmmoInClip(CACHE.Ped, joaat(self.name), true) then
+							if amount >= GetMaxAmmoInClip(CACHE.Ped, joaat(self.name), true) then
 								--SetPedAmmo(CACHE.Ped, joaat(self.name), math.min(amount, GetMaxAmmoInClip(CACHE.Ped, joaat(self.name), true)))
 								SetPedAmmoByType(CACHE.Ped, joaat(type), math.min(amount, GetMaxAmmoInClip(CACHE.Ped, joaat(self.name), true)))
 							else

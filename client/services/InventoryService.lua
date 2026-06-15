@@ -260,8 +260,11 @@ local inventory <const> = {
 		local isMelee <const> = IsWeaponMeleeWeapon(weapon:getName()) == 1
 		local isThrowable <const> = IsWeaponThrowable(weapon:getName()) == 1
 		local isPetrolCan <const> = GetWeapontypeGroup(weapon:getName()) == joaat("GROUP_PETROLCAN")
+		local isKit <const> = IsWeaponKit(weapon:getName()) == 1
+		local isLantern <const> = IsWeaponLantern(weapon:getName()) == 1
+		local isFishingRod <const> = weapon:getName() == `WEAPON_FISHINGROD`
 
-		if isMelee or isThrowable or isPetrolCan then
+		if isMelee or isThrowable or isPetrolCan or isKit or isLantern or isFishingRod then
 			local ammoCount = 1
 			if joaat(weapon:getName()) == `WEAPON_THROWN_THROWING_KNIVES` then
 				ammoCount = weapon:getAmmo("AMMO_THROWING_KNIVES")
