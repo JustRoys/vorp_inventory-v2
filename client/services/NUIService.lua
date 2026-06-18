@@ -343,6 +343,7 @@ local nuiService = {
 			IS_INV_OPEN = true
 			NUI_SERVICE.INVENTORY.GET_LOAD()
 		end,
+
 		RELOAD = function(inventory, packed)
 			local payload = {}
 			if packed then
@@ -479,6 +480,7 @@ local nuiService = {
 
 		PROCESSING_PAYMENT = function()
 			IS_PROCESSING_PAYMENT = false
+			INVENTORY_DISABLED = false
 		end,
 
 		SAVE_LAYOUT = function(data, cb)
@@ -677,9 +679,10 @@ local nuiService = {
 
 		GIVE = function(obj)
 			NUI_SERVICE.INVENTORY.CLOSE()
-			if not CAN_USE_GIVE then
+			if not CAN_USE_GIVE or INVENTORY_DISABLED then
 				return CORE.NotifyRightTip(LANG.cantgivehere, 5000)
 			end
+			INVENTORY_DISABLED = true
 
 			local result <const> = exports.vorp_lib:Select({
 				allow_self = false,
@@ -690,17 +693,20 @@ local nuiService = {
 			})
 
 			if not result then
+				INVENTORY_DISABLED = false
 				return CORE.NotifyRightTip(LANG.noPlayersFound, 5000)
 			end
 
 			local target = result
 			if target == GetPlayerServerId(CACHE.Player) then
+				INVENTORY_DISABLED = false
 				return CORE.NotifyRightTip(LANG.cantgiveyourself, 5000)
 			end
 
 			local data = obj
 			local data2 = data.data
 			local isvalid = Validator.IsValidNuiCallback(data.hsn)
+			--close inventory
 
 			if isvalid then
 				local itemId = data2.id
@@ -708,35 +714,52 @@ local nuiService = {
 				if data2.type == "item_money" then
 					if IS_PROCESSING_PAYMENT then return end
 					IS_PROCESSING_PAYMENT = true
+					--BLOCK OPEN INVENTORY HERE AND DROPPING ANY ITEMS UNTIL THE GIVE IS COMPLETED OR FAILED
+
 					TriggerServerEvent("vorpinventory:giveMoneyToPlayer", target, tonumber(data2.count))
 				elseif CONFIG.INVENTORY_UI.ADD_GOLD_ITEM and data2.type == "item_gold" then
 					if IS_PROCESSING_PAYMENT then return end
 					IS_PROCESSING_PAYMENT = true
+
+					INVENTORY_DISABLED = true
 					TriggerServerEvent("vorpinventory:giveGoldToPlayer", target, tonumber(data2.count))
 				elseif data2.type == "item_ammo" then
 					if IS_PROCESSING_PAYMENT then return end
 					IS_PROCESSING_PAYMENT = true
+
 					local amount = tonumber(data2.count)
 					local ammotype = data2.item
 					local maxcount = SHARED_DATA.MAX_AMMO[ammotype]
 					if amount > 0 and maxcount >= amount then
+						INVENTORY_DISABLED = true
 						TriggerServerEvent("vorpinventory:servergiveammo", ammotype, amount, target, maxcount)
+					else
+						INVENTORY_DISABLED = false
 					end
 				elseif data2.type == "item_standard" then
 					local amount = tonumber(data2.count)
 					local item = PLAYER_INVENTORY.ITEMS[itemId]
 
 					if amount > 0 and item ~= nil and item:getCount() >= amount then
+						INVENTORY_DISABLED = true
 						TriggerServerEvent("vorpinventory:serverGiveItem", itemId, amount, target)
+					else
+						INVENTORY_DISABLED = false
 					end
 				else
+					INVENTORY_DISABLED = true
 					TriggerServerEvent("vorpinventory:serverGiveWeapon", tonumber(itemId), target)
 				end
+
+
+				NUI_SERVICE.INVENTORY.CLOSE()
+			else
+				INVENTORY_DISABLED = false
 			end
 		end,
 
 		PLACE = function(obj)
-			if not CAN_USE_DROP then
+			if not CAN_USE_DROP or INVENTORY_DISABLED then
 				return CORE.NotifyRightTip(LANG.cantdrophere, 5000)
 			end
 
@@ -1023,7 +1046,7 @@ local nuiService = {
 		end,
 
 		DROP = function(obj, skip)
-			if not CAN_USE_DROP then
+			if not CAN_USE_DROP or INVENTORY_DISABLED then
 				return CORE.NotifyRightTip(LANG.cantdrophere, 5000)
 			end
 
@@ -1294,7 +1317,7 @@ local nuiService = {
 	ITEM = {
 
 		DROP = function(obj, skip)
-			if not CAN_USE_DROP then
+			if not CAN_USE_DROP or INVENTORY_DISABLED then
 				return CORE.NotifyRightTip(LANG.cantdrophere, 5000)
 			end
 
@@ -1332,7 +1355,6 @@ local nuiService = {
 			else
 				dropData = { name = itemName, obj = index, amount = quantity, isItem = 1, position = data.advanced.position, rotation = data.advanced.rotation, id = itemId }
 			end
-
 			local result = CORE.Callback.TriggerAwait("vorp_inventory:callback:DropItem", dropData)
 			if not result then return end
 			NUI_SERVICE.INVENTORY.LOAD_ASYNC()
@@ -1704,7 +1726,7 @@ local nuiService = {
 	},
 	CURRENCY = {
 		DROP_MONEY = function(obj, skip)
-			if not CAN_USE_DROP then
+			if not CAN_USE_DROP or INVENTORY_DISABLED then
 				return CORE.NotifyRightTip(LANG.cantdrophere, 5000)
 			end
 
@@ -1747,7 +1769,7 @@ local nuiService = {
 			NUI_SERVICE.INVENTORY.LOAD_ASYNC()
 		end,
 		DROP_GOLD = function(obj, skip)
-			if not CAN_USE_DROP then
+			if not CAN_USE_DROP or INVENTORY_DISABLED then
 				return CORE.NotifyRightTip(LANG.cantdrophere, 5000)
 			end
 
@@ -1795,7 +1817,7 @@ local nuiService = {
 			NUI_SERVICE.INVENTORY.LOAD_ASYNC()
 		end,
 		DROP_ROLL = function(obj, skip)
-			if not CAN_USE_DROP then
+			if not CAN_USE_DROP or INVENTORY_DISABLED then
 				return CORE.NotifyRightTip(LANG.cantdrophere, 5000)
 			end
 
