@@ -1,5 +1,3 @@
-
-
 let craftingRecipes = [];
 let craftingExternalCounts = null;
 let craftingPanelSavedPos = null;
@@ -76,6 +74,18 @@ const CRAFTING = {
             if (!keys.length) return { key: null, amount: 0 };
             const key = keys[0];
             return { key, amount: Number(reward[key]) || 0 };
+        },
+
+        DISPLAY_NAME: function (itemName) {
+            const raw = itemName == null ? "" : String(itemName).trim();
+            if (!raw) return "Unknown item";
+
+            return raw
+                .replace(/[_-]+/g, " ")
+                .replace(/\s+/g, " ")
+                .replace(/\b\w/g, function (m) {
+                    return m.toUpperCase();
+                });
         },
     },
 
@@ -282,6 +292,7 @@ const CRAFTING = {
         const idx = craftingSelectedRecipeIndex;
         const recipe = idx != null && Number.isFinite(idx) && craftingRecipes[idx] != null ? craftingRecipes[idx] : null;
         const $img = $("#handCraftingRewardImg");
+        const $name = $("#handCraftingRecipeName");
         const $desc = $("#handCraftingDesc");
         const $needed = $("#handCraftingNeeded");
         const $prompt = $("#handCraftingSelectPrompt");
@@ -292,6 +303,7 @@ const CRAFTING = {
 
         if (!recipe) {
             $img.attr("src", CRAFTING.ICON.IMG_SRC(""));
+            $name.text("");
             $desc.text("");
             $prompt.show();
             $preview.hide();
@@ -309,11 +321,13 @@ const CRAFTING = {
         $craftBtn.show();
 
         const firstReward = CRAFTING.RECIPE.FIRST_REWARD_ENTRY(recipe.reward);
+        const recipeName = CRAFTING.RECIPE.DISPLAY_NAME(firstReward.key);
         $img.attr("src", CRAFTING.ICON.IMG_SRC(firstReward.key));
         $img.off("error.handCraft").on("error.handCraft", function () {
             $(this).off("error.handCraft").attr("src", CRAFTING.ICON.IMG_SRC(""));
         });
 
+        $name.text(recipeName);
         $desc.text((recipe.desc != null && String(recipe.desc)) || "");
 
         const needed = recipe.needed;
@@ -325,12 +339,14 @@ const CRAFTING = {
             const need = Number(needed[name]) || 0;
             const have = counts[String(name)] || 0;
             const ok = have >= need;
+            const displayName = CRAFTING.RECIPE.DISPLAY_NAME(name);
             const iconLayer = CRAFTING.ICON.RESOLVE_LAYER(name);
             const iconStyle = UTILS.INVENTORY_SLOT_BACKGROUND_STYLE(iconLayer, "3.1vw", "5.35vh", "");
             const $row = $("<div/>", { class: "craft-req" + (ok ? "" : " craft-req--missing") });
             const $slot = $("<div/>", { class: "craft-req__slot" });
             $slot.append($("<span/>", { class: "item-inv-icon" }).attr("style", iconStyle));
             $row.append($slot);
+            $row.append($("<span/>", { class: "craft-req__name" }).text(displayName));
             $row.append(
                 $("<span/>", { class: "craft-req__count" }).text(
                     String(have) + " / " + String(need)
